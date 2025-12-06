@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Weather Service UI</title>
+    <style>
+      body{font-family: Arial, sans-serif;max-width:900px;margin:24px auto}
+      label{display:block;margin-top:12px}
+      input{padding:6px 8px}
+      button{margin-top:12px;padding:8px 12px}
+      .output{margin-top:18px}
+    </style>
+  </head>
+  <body>
+    <h1>Weather Service</h1>
+    <p>Enter coordinates and generate reports.</p>
+    <label>Latitude <input id="lat" value="47.37"/></label>
+    <label>Longitude <input id="lon" value="8.55"/></label>
+    <div>
+      <button id="fetch">Fetch & Store</button>
+      <button id="xls">Download Excel</button>
+      <button id="png">Download PNG</button>
+      <button id="pdf">Download PDF</button>
+    </div>
+    <div class="output" id="out"></div>
+
+    <script>
+      const out = document.getElementById('out');
+      function show(msg){ out.innerText = msg }
+
+      document.getElementById('fetch').onclick = async () => {
+        const lat = document.getElementById('lat').value;
+        const lon = document.getElementById('lon').value;
+        show('Calling fetch...');
+        try{
+          const r = await fetch(`/weather-report?lat=${lat}&lon=${lon}`);
+          const j = await r.json();
+          show(JSON.stringify(j));
+        }catch(e){ show('Error: '+e) }
+      }
+
+      document.getElementById('xls').onclick = () => {
+        const lat = document.getElementById('lat').value;
+        const lon = document.getElementById('lon').value;
+        window.location = `/export/excel`;
+      }
+
+      document.getElementById('png').onclick = () => {
+        window.location = `/export/png`;
+      }
+
+      document.getElementById('pdf').onclick = () => {
+        window.location = `/export/pdf`;
+      }
+    </script>
+  </body>
+</html>
